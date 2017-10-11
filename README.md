@@ -1,7 +1,13 @@
-[![Puppet Forge](http://img.shields.io/puppetforge/v/puppet/extlib.svg)](https://forge.puppetlabs.com/puppet/extlib)
-[![Build Status](https://img.shields.io/travis/puppet-community/puppet-extlib/master.svg)](https://travis-ci.org/puppet-community/puppet-extlib)
+# Extlib module for Puppet
 
-####Table of Contents
+[![Build Status](https://travis-ci.org/voxpupuli/puppet-extlib.png?branch=master)](https://travis-ci.org/voxpupuli/puppet-extlib)
+[![Code Coverage](https://coveralls.io/repos/github/voxpupuli/puppet-extlib/badge.svg?branch=master)](https://coveralls.io/github/voxpupuli/puppet-extlib)
+[![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/extlib.svg)](https://forge.puppetlabs.com/puppet/extlib)
+[![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/extlib.svg)](https://forge.puppetlabs.com/puppet/extlib)
+[![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/extlib.svg)](https://forge.puppetlabs.com/puppet/extlib)
+[![Puppet Forge - scores](https://img.shields.io/puppetforge/f/puppet/extlib.svg)](https://forge.puppetlabs.com/puppet/extlib)
+
+#### Table of Contents
 
 1. [Overview](#overview)
 3. [Setup - The basics of getting started with extlib](#setup)
@@ -9,27 +15,24 @@
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Development - Guide for contributing to the module](#development)
 
-##Overview
+## Overview
 
-This module provides functions that are out of scope for 
-[stdlib](https://github.com/puppetlabs/puppetlabs-stdlib). Some of them are
-even intristically tied to stdlib.
+This module provides functions that are out of scope for [stdlib](https://github.com/puppetlabs/puppetlabs-stdlib).
+Some of them are even intrinsically tied to stdlib.
 
-##Setup
+## Setup
 
 ```console
  % puppet module install puppet-extlib
 ```
 
-##Usage
+## Usage
 
-###resources_deep_merge
+### resources_deep_merge
 
 - *Type*: rvalue
 
 Returns a [deep-merged](#deep_merge) resource hash (hash of hashes).
-
-*Examples:*
 
 ```puppet
     $tcresource_defaults = {
@@ -84,14 +87,14 @@ will return:
     }
 ```
 
-###echo
+### echo
 
 This function outputs the variable content and its type to the
 debug log. It's similiar to the "notice" function but provides
 a better output format useful to trace variable types and values
 in the manifests.
 
-```ruby
+```puppet
 # examples:
 $v1 = 'test'
 $v2 = ["1", "2", "3"]
@@ -119,17 +122,19 @@ echo($v7) # no comment here
 # (String) "12345"
 ```
 
-###cache_data
+### cache_data
 
-Retrieves data from a cache file, or creates it with supplied data if the file doesn't exist. Useful for having data that's randomly generated once on the master side (e.g. a password), but then stays the same on subsequent runs. The `cache_data` takes three parameters:
+Retrieves data from a cache file, or creates it with supplied data if the file
+doesn't exist. Useful for having data that's randomly generated once on the
+master side (e.g. a password), but then stays the same on subsequent runs. The
+`cache_data` takes three parameters:
 
- * namespace: the folder under Puppet's vardir that the data is placed (e.g. mysql becomes /var/lib/puppet/mysql)
- * data_name: the filename to store the data as (e.g. mysql_password becomes /var/lib/puppet/mysql/mysql_password)
- * initial_data: the data to store and cache in the data_name file 
+* namespace: the folder under Puppet's vardir that the data is placed (e.g. mysql
+  becomes /var/lib/puppet/mysql)
+* data_name: the filename to store the data as (e.g. mysql_password becomes /var/lib/puppet/mysql/mysql_password)
+* initial_data: the data to store and cache in the data_name file
 
-*Examples:*
-
-```
+```puppet
 class mymodule::params {
 
   $password = cache_data('mysql', 'mysql_password', 'this_is_my_password')
@@ -137,11 +142,9 @@ class mymodule::params {
 }
 ```
 
-###random_password
+### random_password
 
 Returns a string of arbitrary length that contains randomly selected characters.
-
-*Examples:*
 
 ```
 Prototype:
@@ -167,12 +170,25 @@ The result will be as follows:
   notice: Scope(Class[main]): FtvfvkS9j9wXLsd6
 ```
 
-##Limitations
+### default_content
+
+Takes an optional content and an optional template name and returns the contents
+of a file.
+
+```puppet
+$config_file_content = default_content($file_content, $template_location)
+file { '/tmp/x':
+  ensure  => 'file',
+  content => $config_file_content,
+}
+```
+
+## Limitations
 
 This module requires puppetlabs-stdlib >=3.2.1, which is when `deep_merge()`
 was introduced.
 
-##Development
+## Development
 
 We highly welcome new contributions to this module, especially those that
 include documentation, and rspec tests ;) but will happily guide you through
